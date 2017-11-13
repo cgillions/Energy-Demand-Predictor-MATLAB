@@ -1,0 +1,115 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+
+public class Main {
+  public static void main(String[] args) {
+  	// Get the input file.
+    File inputFile = new File("2012-2016_original.csv");
+
+    // Create output files.
+    File trainFile = createFile("train.csv");
+    File testFile  = createFile("test.csv");
+
+    // Keep a reference to the output paths.
+    Path trainPath = Paths.get(trainFile.getAbsolutePath());
+    Path testPath  = Paths.get(testFile.getAbsolutePath());
+
+    try {
+    	// Read the data from the file.
+    	Scanner scanner = new Scanner(inputFile);
+    	ArrayList<String[]> timestampValues = new ArrayList<>();
+		while (scanner.hasNextLine()) {
+    		timestampValues.add(scanner.nextLine().split(","));
+    	}
+
+    	// Create a formatter to parse a date string.
+    	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+    	// Format the data into "dayOfYear,hourOfDay,dayOfWeek,demand".
+    	Calendar calendar;
+    	String   output;
+    	int count = 0, currentHour = 0, avgDemand = 0, avgCount = 0, dayOfYear, hourOfDay, dayOfWeek;
+    	for (String[] timestampValue : timestampValues) {
+
+    		// Strip whitespace and validate the length of the line.
+    		String dateTime = timestampValue[0].replaceAll("\\s", "");
+    		if (dateTime.length() != 18) {
+    			continue;
+    		}
+    		
+    		// Pull each element out of the string.
+    		String dateString = dateTime.substring(0,  10);
+    		String timestamp  = dateTime.substring(10, 18);
+
+    		// Split each part into its subcomponents.
+    		String[] date = dateString.split("-");
+    		String[] time = timestamp.split(":");
+
+    		// Use Calendar library to get dayOfYear and dayOfWeek.
+    		calendar  = Calendar.getInstance();
+    		calendar.setTimeInMillis(formatter.parse(dateString).getTime());
+    		dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
+    		dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+    		// Get the hour of day.
+    		hourOfDay = Integer.valueOf(time[0]);
+
+    		if (hourOfDay == currentHour) {
+    			// Contribute to the average demand for this hour.
+    			avgDemand += Integer.valueOf(timestampValue[1]);
+    			avgCount++;
+    		} else {
+    			// This is a reading for a new hour.
+    			// Save the previous hour.
+    			avgDemand /= avgCount;
+    			output = String.format("%d,%d,%d,%d\n", dayOfYear, hourOfDay, dayOfWeek, avgDemand);
+
+    			// Output the data to a file. 80% of data is training, 20% testing.
+	    		Files.write(count++ % 5 == 0 ? 
+	    			testPath : trainPath, 
+	    			output.getBytes(), 
+	    			StandardOpenOption.APPEND
+	    		);
+
+	    		// Reset the counts by starting over.
+	    		currentHour = hourOfDay;
+	    		avgDemand   = Integer.valueOf(timestampValue[1]);
+	    		avgCount    = 1;
+    		}
+    	}
+    } catch (IOException ex) {
+    	System.out.println("IO Error! " + ex.getMessage());
+    	ex.printStackTrace();
+    } catch (ParseException ex) {
+    	System.out.println("Parse Error! " + ex.getMessage());
+    	ex.printStackTrace();
+    }
+  }
+
+  private static File createFile(String filename) {
+  	System.out.println("Creating file: " + filename);
+  	File file = new File(filename);
+  	try {
+	    if (file.exists()) {
+	    	file.delete();
+	    }
+	    file.createNewFile();
+	} catch (IOException ex) {
+		System.out.println("Error! " + ex.getMessage());
+		ex.printStackTrace();
+	}
+    return file;
+  }
+}
