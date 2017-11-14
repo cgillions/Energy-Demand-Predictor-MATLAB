@@ -33,7 +33,7 @@ public class Main {
     	String   output;
         Calendar calendar;
         String[] timestampValue;
-    	int count = currentHour = 0, avgDemand = 0, avgCount = 0, dayOfYear, hourOfDay, dayOfWeek;
+    	int count = 0, currentHour = 0, avgDemand = 0, avgCount = 0, dayOfYear, hourOfDay, dayOfWeek;
     	while (scanner.hasNextLine()) {
             timestampValue = scanner.nextLine().split(",");
     		// Strip whitespace and validate the length of the line.
