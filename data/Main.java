@@ -1,11 +1,7 @@
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Calendar;
-import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.nio.file.StandardOpenOption;
@@ -19,30 +15,27 @@ public class Main {
     File inputFile = new File("2012-2016_original.csv");
 
     // Create output files.
-    File trainFile = createFile("train.csv");
-    File testFile  = createFile("test.csv");
+    File trainFile = createFile("train.csv"),
+         testFile  = createFile("test.csv");
 
     // Keep a reference to the output paths.
-    Path trainPath = Paths.get(trainFile.getAbsolutePath());
-    Path testPath  = Paths.get(testFile.getAbsolutePath());
+    Path trainPath = Paths.get(trainFile.getAbsolutePath()),
+         testPath  = Paths.get(testFile.getAbsolutePath());
 
     try {
     	// Read the data from the file.
     	Scanner scanner = new Scanner(inputFile);
-    	ArrayList<String[]> timestampValues = new ArrayList<>();
-		while (scanner.hasNextLine()) {
-    		timestampValues.add(scanner.nextLine().split(","));
-    	}
 
     	// Create a formatter to parse a date string.
     	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     	// Format the data into "dayOfYear,hourOfDay,dayOfWeek,demand".
-    	Calendar calendar;
     	String   output;
-    	int count = 0, currentHour = 0, avgDemand = 0, avgCount = 0, dayOfYear, hourOfDay, dayOfWeek;
-    	for (String[] timestampValue : timestampValues) {
-
+        Calendar calendar;
+        String[] timestampValue;
+    	int count = currentHour = 0, avgDemand = 0, avgCount = 0, dayOfYear, hourOfDay, dayOfWeek;
+    	while (scanner.hasNextLine()) {
+            timestampValue = scanner.nextLine().split(",");
     		// Strip whitespace and validate the length of the line.
     		String dateTime = timestampValue[0].replaceAll("\\s", "");
     		if (dateTime.length() != 18) {
