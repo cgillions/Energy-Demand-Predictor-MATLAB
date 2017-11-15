@@ -1,6 +1,6 @@
 function source
     % Seed the random number generator so experiments are comparable.
-    rng(10);
+    %rng(10);
     
     % Open the training and testing files.
     [trainX, trainTarget] = getData("train.csv");
@@ -20,8 +20,8 @@ function source
     testX(:, 3) = testX(:, 3) / maxDay;
     
     % Initialise network values.
-    neuronCount  = 4;
-    neuronWidth  = 0.2;
+    neuronCount  = 12;
+    neuronWidth  = 0.1;
     learningRate = 0.2;
     learnBatch   = false;
     
@@ -53,7 +53,7 @@ function source
         else
             % Update the weights for each data point (online).
             for dataIndex = 1:size(trainX, 1)
-                network.train(trainX(dataIndex, :), trainTarget(dataIndex, :));
+                network.train(trainX(dataIndex, :), trainTarget(dataIndex));
             end
         end
     end

@@ -77,7 +77,7 @@ classdef Network < handle
         
         function train(network, input, target)
             % Find the output of the network for the data point.
-            if size(input(:, 1), 1) > 1
+            if size(input, 1) > 1
                 [output, activationValues] = network.feedBatch(input);
                 
                 % Updates the weight of each neuron based on the input, output & target.
