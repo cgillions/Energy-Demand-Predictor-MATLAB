@@ -1,6 +1,6 @@
 function source
     % Seed the random number generator so experiments are comparable.
-    %rng(10);
+    rng(10);
     
     % Open the training and testing files.
     [trainX, trainTarget] = getData("train.csv");
@@ -20,7 +20,7 @@ function source
     testX(:, 3) = testX(:, 3) / maxDay;
     
     % Initialise network values.
-    neuronCount  = 12;
+    neuronCount  = 50;
     neuronWidth  = 0.1;
     learningRate = 0.2;
     learnBatch   = false;

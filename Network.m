@@ -30,7 +30,7 @@ classdef Network < handle
             for neuronIndex = 1:neuronCount
                 % Get the neuron's activatstrion.
                 neuron     = network.neurons(neuronIndex);
-                activation = neuron.activation(input(1), input(2), input(3));
+                activation = neuron.activation(input);
 
                 % Append the result matrices.
                 activationValues(neuronIndex) = activation;
@@ -57,7 +57,7 @@ classdef Network < handle
                 for neuronIndex = 1 : neuronCount
                     % Get the neuron's activation.
                     neuron     = network.neurons(neuronIndex);
-                    activation = neuron.activation(input(dataIndex, 1), input(dataIndex, 2), input(dataIndex, 3));
+                    activation = neuron.activation(input(dataIndex, :));
                     
                     % Append the result matrices.
                     activationValues(dataIndex, neuronIndex) = activation;

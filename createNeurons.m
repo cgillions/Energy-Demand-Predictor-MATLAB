@@ -9,9 +9,9 @@ function [neurons] = createNeurons(count, width, clusterData)
 
     % Create a neuron for each cluster, preallocating the array.
     neurons(count, 1) = Neuron();
+%     keyboard;
     for i = 1 : size(clusterCenters, 1)
-        neurons(i) = Neuron(clusterCenters(i), clusterCenters(i), ...
-            clusterCenters(i), randomInRange(0, 1), width);
+        neurons(i) = Neuron(clusterCenters(i, :), randomInRange(0, 1), width);
     end
     
 %     % Create a neuron for each cluster, preallocating the array.
