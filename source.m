@@ -20,8 +20,8 @@ function source
     testX(:, 3) = testX(:, 3) / maxDay;
     
     % Initialise network values.
-    neuronCount  = 50;
-    neuronWidth  = 0.1;
+    neuronCount  = 150;
+    neuronWidth  = 0.5;
     learningRate = 0.2;
     learnBatch   = false;
     
@@ -30,7 +30,7 @@ function source
     
     % Train the network.
     % Keep track of the training & testing RMS error for each epoch.
-    epochCount = 20;
+    epochCount = 5;
     epochRms   = [epochCount, 2];
     for epoch  = 1:epochCount
         disp("Epoch " + epoch);
@@ -60,28 +60,31 @@ function source
     
     % Test the trained network.
     [trainOutput, ~] = network.feedBatch(trainX);
-    [testOutput,  ~] = network.feedBatch(testX);
+    % [testOutput,  ~] = network.feedBatch(testX);
     
-    % Generate many values of x across the domain of the input in order 
-    % to plot the network's function.
     figure;
+%     % Find the mean demand for each day of the year.
+%     meanDemandVsOutput = zeros(maxDayOfYear, 1);
+%     for i = 1:maxDayOfYear
+%         [ids, ~] = find(trainX(:, 1) * maxDayOfYear == i);
+%         meanDemandVsOutput(i, 1) = mean(trainOutput(ids));
+%     end
+    
     subplot(1, 3, 1);
+%     plot(1:6, meanDemandVsOutput(1:6, 1), "ro");
     plot(trainX(:, 1) * maxDayOfYear, trainOutput, "ro");
-    hold on;
-    plot(trainX(:, 1) * maxDayOfYear, trainTarget, "b*");
-    hold off;
+    title("Demand per day of year");
+    xlim([0, 366]);
     
     subplot(1, 3, 2);
     plot(trainX(:, 2) * maxHour, trainOutput, "ro");
-    hold on;
-    plot(trainX(:, 2) * maxHour, trainTarget, "b*");
-    hold off;
+    title("Demand per hour of day");
+    xlim([0, 24]);
     
     subplot(1, 3, 3);
     plot(trainX(:, 3) * maxDay, trainOutput, "ro");
-    hold on;
-    plot(trainX(:, 3) * maxDay, trainTarget, "b*");
-    hold off;
+    title("Demand per day of week");
+    xlim([1, 7]);
     
     % Plot the network's error per epoch.
     plotError(epochRms, neuronWidth, neuronCount, learnBatch);
