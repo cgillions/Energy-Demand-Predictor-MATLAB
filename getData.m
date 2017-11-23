@@ -3,8 +3,8 @@ function [x, target] = getData(filename)
     data   = load(filename);
 %     x      = data(:, 1:3);
 %     target = data(:, 4);
-    x      = data(1:100, 1:3);
-    target = data(1:100, 4);
+    x      = data(1:2:end, 1:3);
+    target = data(1:2:end, 4);
     
 %     % Remove anomalies from the data set.
 %     % https://uk.mathworks.com/matlabcentral/answers/298250-how-do-i-remove-outliers-from-a-matrix

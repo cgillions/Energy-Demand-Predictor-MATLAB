@@ -6,7 +6,7 @@ function source
     [trainX, trainTarget] = getData("train.csv");
     [testX,  testTarget]  = getData("test.csv");
     
-    % Normalise the data.
+    % Normalise the data between 0 and 1.
     maxDayOfYear = 366;
     maxHour      = 24;
     maxDay       = 7;
@@ -20,9 +20,9 @@ function source
     testX(:, 3) = testX(:, 3) / maxDay;
     
     % Initialise network values.
-    neuronCount  = 150;
-    neuronWidth  = 0.5;
-    learningRate = 0.2;
+    neuronCount  = 50;
+    neuronWidth  = 0.05;
+    learningRate = 0.05;
     learnBatch   = false;
     
     % Create the network.
@@ -70,18 +70,18 @@ function source
 %         meanDemandVsOutput(i, 1) = mean(trainOutput(ids));
 %     end
     
-    subplot(1, 3, 1);
+    subplot(3, 1, 1);
 %     plot(1:6, meanDemandVsOutput(1:6, 1), "ro");
     plot(trainX(:, 1) * maxDayOfYear, trainOutput, "ro");
     title("Demand per day of year");
     xlim([0, 366]);
     
-    subplot(1, 3, 2);
+    subplot(3, 1, 2);
     plot(trainX(:, 2) * maxHour, trainOutput, "ro");
     title("Demand per hour of day");
     xlim([0, 24]);
     
-    subplot(1, 3, 3);
+    subplot(3, 1, 3);
     plot(trainX(:, 3) * maxDay, trainOutput, "ro");
     title("Demand per day of week");
     xlim([1, 7]);
