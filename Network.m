@@ -23,8 +23,8 @@ classdef Network < handle
             neuronCount = size(network.neurons, 1);
 
             % Initialise matrices to hold the neuron's output values.
-            activationValues = [neuronCount, 1];
-            outputValues     = [neuronCount, 1];
+            activationValues = zeros(neuronCount, 1);
+            outputValues     = zeros(neuronCount, 1);
 
             % For the given input, store the activation value for each neuron.
             for neuronIndex = 1:neuronCount
@@ -49,8 +49,8 @@ classdef Network < handle
             dataCount   = size(input(:, 1), 1); 
             
             % Initialise matrices to hold the neuron's output values.
-            activationValues = [dataCount, neuronCount];
-            outputValues     = [dataCount, neuronCount];
+            activationValues = zeros(dataCount, neuronCount);
+            outputValues     = zeros(dataCount, neuronCount);
             
             % For each data point, store the activation value for each neuron.
             for dataIndex = 1 : dataCount
@@ -67,12 +67,11 @@ classdef Network < handle
 
             % Now we have the activation values and weighted output values for each
             % data point for each hidden node, we can compute the output of the network.
-            outputVector = [dataCount, 1];
+            outputVector = zeros(dataCount, 1);
+            
             for dataIndex = 1 : dataCount
                 outputVector(dataIndex) = sum(outputValues(dataIndex, :)) / sum(activationValues(dataIndex, :));
             end
-
-            outputVector = outputVector';
         end
         
         function train(network, input, target)
